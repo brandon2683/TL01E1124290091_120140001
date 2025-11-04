@@ -11,19 +11,13 @@ public class SQLiteConexion extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        String query = "CREATE TABLE IF NOT EXISTS personas (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "pais TEXT," +
-                "nombre TEXT," +
-                "telefono TEXT," +
-                "nota TEXT)";
-        db.execSQL(query);
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        sqLiteDatabase.execSQL(Transacciones.CREATETABLECONTACTOS);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS personas");
-        onCreate(db);
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        sqLiteDatabase.execSQL(Transacciones.DROPTABLECONTACTOS);
+        onCreate(sqLiteDatabase);
     }
 }
