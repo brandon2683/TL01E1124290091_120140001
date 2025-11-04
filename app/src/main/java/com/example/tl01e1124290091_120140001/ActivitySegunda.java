@@ -41,13 +41,13 @@ public class ActivitySegunda extends AppCompatActivity {
         setContentView(R.layout.activity_segunda);
 
         // Inicializar vistas
-        listView = findViewById(R.id.listView);
-        buscar = findViewById(R.id.Buscar);
-        btnCompartir = findViewById(R.id.btncompartir);
-        btnImagen = findViewById(R.id.btnimagen);
-        btnActualizar = findViewById(R.id.btnactualizar);
-        btnEliminar = findViewById(R.id.btneliminar);
-        btnVolver = findViewById(R.id.btnvolver);
+        listView = (ListView) findViewById(R.id.listView);
+        buscar = (EditText) findViewById(R.id.Buscar);
+        btnCompartir = (Button) findViewById(R.id.btncompartir);
+        btnImagen = (Button) findViewById(R.id.btnimagen);
+        btnActualizar = (Button) findViewById(R.id.btnactualizar);
+        btnEliminar = (Button) findViewById(R.id.btneliminar);
+        btnVolver = (Button) findViewById(R.id.btnvolver);
 
         consultarListaContactos();
 

@@ -59,7 +59,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="15dp"
         android:ems="10"
         android:hint="Ingrese el numero de telefono"
@@ -135,7 +135,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="15dp"
         android:ems="10"
         android:hint="Ingrese el nombre"
@@ -145,18 +145,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-    <EditText
+    <Spinner
         android:id="@+id/pais"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="15dp"
-        android:ems="10"
-        android:hint="Ingrese el pais"
-        android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 

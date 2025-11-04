@@ -15,9 +15,12 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -35,10 +38,14 @@ import com.example.tl01e1124290091_120140001.Configuraciones.Transacciones;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText pais, nombres, telefono, nota;
+    EditText nombres, telefono, nota;
+    Spinner pais;
     ImageView imageView;
     Button btnfoto, btnagregar, btncontactos;
 
@@ -46,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private String fotoBase64 = null;
     private static final int PERMISO_CAMARA = 101;
     ActivityResultLauncher<Intent> tomarFotoLauncher;
-
+    Map<String, String> paisCodigo = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,15 +61,15 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        pais = findViewById(R.id.pais);
-        nombres = findViewById(R.id.nombres);
-        telefono = findViewById(R.id.telefono);
-        nota = findViewById(R.id.nota);
-        imageView = findViewById(R.id.imageView);
+        pais = (Spinner) findViewById(R.id.pais);
+        nombres = (EditText) findViewById(R.id.nombres);
+        telefono = (EditText) findViewById(R.id.telefono);
+        nota = (EditText) findViewById(R.id.nota);
+        imageView = (ImageView) findViewById(R.id.imageView);
 
-        btnfoto = findViewById(R.id.btnfoto);
-        btnagregar = findViewById(R.id.btnagregar);
-        btncontactos = findViewById(R.id.btncontactos);
+        btnfoto = (Button) findViewById(R.id.btnfoto);
+        btnagregar = (Button) findViewById(R.id.btnagregar);
+        btncontactos = (Button) findViewById(R.id.btncontactos);
 
         // Abrir cámara
         btnfoto.setOnClickListener(new View.OnClickListener() {
@@ -127,9 +134,33 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "No se pudo obtener la foto", Toast.LENGTH_LONG).show();
                     }
                 }
+        });
+        // Llenar mapa de países y códigos
+        paisCodigo.put("Honduras", "504");
+        paisCodigo.put("Costa Rica", "506");
+        paisCodigo.put("Guatemala", "502");
+        paisCodigo.put("El Salvador", "503");
+        // Crear lista de países para el Spinner
+        ArrayList<String> listaPaises = new ArrayList<>(paisCodigo.keySet());
+        // Adapter del Spinner
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaPaises);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        pais.setAdapter(adapter);
+        pais.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String paisSeleccionado = (String) parent.getItemAtPosition(position);
+                // Llenar automáticamente el código del país en el EditText
+                String codigo = paisCodigo.get(paisSeleccionado);
+                telefono.setText(codigo);
             }
-                );
-        }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // No hacer nada
+            }
+        });
+    }
+
     private String bitmapToBase64(Bitmap bitmap)
     {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -202,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
 
         ContentValues valores = new ContentValues();
         valores.put(Transacciones.nombres, nombres.getText().toString());
-        valores.put(Transacciones.pais, pais.getText().toString());
+        valores.put(Transacciones.pais, pais.getSelectedItem().toString());
         valores.put(Transacciones.telefono,Integer.parseInt(telefono.getText().toString()));
         valores.put(Transacciones.nota, nota.getText().toString());
         valores.put(Transacciones.foto,fotoBase64);
@@ -220,10 +251,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void clean()
     {
-        pais.setText("");
-            nombres.setText("");
-            telefono.setText("");
-            nota.setText("");
-            imageView.setImageBitmap(null); // opcional, limpia la foto
+        pais.setSelection(-1);
+        nombres.setText("");
+        telefono.setText("");
+        nota.setText("");
+        imageView.setImageBitmap(null); // opcional, limpia la foto
     }
 }
