@@ -1,18 +1,27 @@
 package com.example.tl01e1124290091_120140001;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tl01e1124290091_120140001.Configuraciones.Contacto;
+import com.example.tl01e1124290091_120140001.Configuraciones.ContactoAdapter;
 import com.example.tl01e1124290091_120140001.Configuraciones.SQLiteConexion;
 import com.example.tl01e1124290091_120140001.Configuraciones.Transacciones;
 
@@ -54,6 +63,7 @@ public class ActivitySegunda extends AppCompatActivity {
         btnEliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                eliminar();
             }
         });
 
@@ -68,6 +78,7 @@ public class ActivitySegunda extends AppCompatActivity {
         btnCompartir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Compartir();
             }
         });
 
@@ -75,10 +86,18 @@ public class ActivitySegunda extends AppCompatActivity {
         btnImagen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Imagen();
+            }
+        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                contactoSeleccionado = listaContacto.get(position);
+                Toast.makeText(ActivitySegunda.this, "Seleccionado: " + contactoSeleccionado.getNombre(), Toast.LENGTH_SHORT).show();
             }
         });
     }
-
+    private Contacto contactoSeleccionado = null;
     private void consultarListaContactos() {
         // Conexión a la base de datos
         SQLiteConexion conexion = new SQLiteConexion(this, Transacciones.DBNAME, null, 1);
@@ -102,18 +121,66 @@ public class ActivitySegunda extends AppCompatActivity {
 
             // Agregar a la lista de objetos
             listaContacto.add(contacto);
-
-            // Crear la información que se mostrará en el ListView
-            listaInformacion.add(contacto.getNombre() + " - " + contacto.getTelefono());
         }
 
         cursor.close();
         db.close();
 
         // Crear y asignar el ArrayAdapter al ListView
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, listaInformacion);
+        ContactoAdapter adapter = new ContactoAdapter(this, listaContacto);
         listView.setAdapter(adapter);
     }
+    public void eliminar() {
+        if (contactoSeleccionado != null) {
+            SQLiteConexion conexion = new SQLiteConexion(this, Transacciones.DBNAME, null, 1);
+            SQLiteDatabase db = conexion.getWritableDatabase();
 
+            // Borrar por nombre y teléfono (o agrega un ID único en la tabla)
+            int resultado = db.delete(Transacciones.TableContactos,
+                    Transacciones.nombres + "=? AND " + Transacciones.telefono + "=?",
+                    new String[]{contactoSeleccionado.getNombre(), contactoSeleccionado.getTelefono()});
+
+            db.close();
+
+            if (resultado > 0) {
+                Toast.makeText(this, "Contacto eliminado", Toast.LENGTH_SHORT).show();
+                consultarListaContactos(); // recargar lista
+            } else {
+                Toast.makeText(this, "Error al eliminar", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Selecciona un contacto", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void Compartir() {
+        if (contactoSeleccionado != null) {
+            String mensaje = "Nombre: " + contactoSeleccionado.getNombre() +
+                    "\nTeléfono: " + contactoSeleccionado.getTelefono() +
+                    "\nPaís: " + contactoSeleccionado.getPais() +
+                    "\nNota: " + contactoSeleccionado.getNota();
+
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TEXT, mensaje);
+            startActivity(Intent.createChooser(intent, "Compartir contacto"));
+        } else {
+            Toast.makeText(this, "Selecciona un contacto", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void Imagen() {
+        if (contactoSeleccionado != null && contactoSeleccionado.getFoto() != null) {
+            byte[] bytes = Base64.decode(contactoSeleccionado.getFoto(), Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+            // Abrir un Dialog para mostrar la imagen
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            ImageView imageView = new ImageView(this);
+            imageView.setImageBitmap(bitmap);
+            builder.setView(imageView);
+            builder.setPositiveButton("Cerrar", null);
+            builder.show();
+        } else {
+            Toast.makeText(this, "No hay foto disponible", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
