@@ -22,7 +22,7 @@ public class Transacciones
             "CREATE TABLE " + TableContactos + " ( " +
                     pais + " TEXT NOT NULL, " +
                     nombres + " TEXT NOT NULL, " +
-                    telefono + " INTEGER, " +
+                    telefono + " TEXT, " +
                     nota + " TEXT NOT NULL, " +
                     foto + " TEXT ) " ;
 
