@@ -238,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
         valores.put(Transacciones.nota, nota.getText().toString());
         valores.put(Transacciones.foto,fotoBase64);
 
+
         long resultado = db.insert(Transacciones.TableContactos, null, valores);
 
         if (resultado != -1) {
