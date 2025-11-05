@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         btnagregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddPersona();
+                AddContacto();
             }
         });
 
@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
             fotoFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                     "foto_" + System.currentTimeMillis() + ".jpg");
             Uri fotoUri = FileProvider.getUriForFile(this,
-                    "com.example.ucenm3p20251.provider", fotoFile);
+                    "com.example.tl01e1124290091_120140001.provider", fotoFile);
 
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, fotoUri);
@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Guardar contacto en SQLite
-    private void AddPersona() {
+    private void AddContacto() {
         SQLiteConexion conexion = new SQLiteConexion(this, Transacciones.DBNAME, null, 1);
         SQLiteDatabase db =  conexion.getWritableDatabase();
 
