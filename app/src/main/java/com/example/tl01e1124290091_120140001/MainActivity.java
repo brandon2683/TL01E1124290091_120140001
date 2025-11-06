@@ -28,6 +28,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -225,9 +226,35 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Error al abrir cámara: " + ex.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
-
+    private void showAlert(String titulo, String mensaje) {
+        new AlertDialog.Builder(this)
+                .setTitle(titulo)
+                .setMessage(mensaje)
+                .setPositiveButton("Aceptar", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
     // Guardar contacto en SQLite
     private void AddContacto() {
+        String nombreStr = nombres.getText().toString().trim();
+        String telefonoStr = telefono.getText().toString().trim();
+        String notaStr = nota.getText().toString().trim();
+        String paisStr = pais.getSelectedItem().toString();
+
+        if (nombreStr.isEmpty() || telefonoStr.isEmpty() || notaStr.isEmpty()) {
+            showAlert("Datos Incompletos", "Por favor, complete todos los campos de texto.");
+            return;
+        }
+
+        if (fotoBase64 == null) {
+            showAlert("Foto Requerida", "Debe tomar una foto para guardar el contacto.");
+            return;
+        }
+
+        // Validación de longitud de teléfono (simple)
+        if (telefonoStr.length() < 7) {
+            showAlert("Teléfono Inválido", "El número de teléfono debe tener al menos 7 dígitos (incluyendo código de país).");
+            return;
+        }
         SQLiteConexion conexion = new SQLiteConexion(this, Transacciones.DBNAME, null, 1);
         SQLiteDatabase db =  conexion.getWritableDatabase();
 
