@@ -1,14 +1,18 @@
 package com.example.tl01e1124290091_120140001.Configuraciones;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tl01e1124290091_120140001.R;
 
@@ -26,6 +30,7 @@ public class ContactoAdapter extends ArrayAdapter<Contacto> {
         this.context = context;
         this.contactos = contactos;
         this.listaOriginal = new ArrayList<>(contactos);
+
     }
 
     @Override
@@ -40,6 +45,7 @@ public class ContactoAdapter extends ArrayAdapter<Contacto> {
         ImageView imgFoto = item.findViewById(R.id.imgFoto);
         TextView tvNombre = item.findViewById(R.id.tvNombre);
         TextView tvTelefono = item.findViewById(R.id.tvTelefono);
+        ImageButton btnLlamar = item.findViewById(R.id.btnLlamar);
 
         tvNombre.setText(contacto.getNombre());
         tvTelefono.setText(contacto.getTelefono());
@@ -52,7 +58,19 @@ public class ContactoAdapter extends ArrayAdapter<Contacto> {
         } else {
             imgFoto.setImageResource(R.mipmap.ic_launcher_round); // Imagen por defecto
         }
-
+        btnLlamar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            String telefono = contacto.getTelefono();
+            if (telefono != null && !telefono.isEmpty()) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + telefono));
+                context.startActivity(intent);
+            } else {
+                Toast.makeText(context, "Número de teléfono no disponible", Toast.LENGTH_SHORT).show();
+            }
+            }
+        });
         return item;
     }
     public void filtrar(String texto) {
