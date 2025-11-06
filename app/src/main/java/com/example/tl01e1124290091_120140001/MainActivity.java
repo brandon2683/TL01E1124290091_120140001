@@ -27,7 +27,6 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -39,6 +38,7 @@ import com.example.tl01e1124290091_120140001.Configuraciones.Transacciones;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else
         {
-            OpenCamara();
+            seleccionarImagen();
         }
     }
     @Override
@@ -207,7 +207,48 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+    private ActivityResultLauncher<Intent> seleccionarImagenLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Uri imageUri = result.getData().getData(); // URI de la imagen seleccionada
+                    try {
+                        // Cargar bitmap desde URI
+                        Bitmap foto = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
 
+                        // Mostrar en ImageView
+                        imageView.setImageBitmap(foto);
+
+                        // Convertir a Base64
+                        fotoBase64 = bitmapToBase64(foto);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, "Error al cargar la imagen", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+    );
+    private void seleccionarImagen() {
+        String[] opciones = {"Cámara", "Galería"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Seleccionar imagen");
+        builder.setItems(opciones, (dialog, which) -> {
+            if (which == 0) {
+                // Tomar foto con cámara
+                OpenCamara();
+            } else if (which == 1) {
+                // Seleccionar imagen de galería
+                abrirGaleria();
+            }
+        });
+        builder.show();
+    }
+    private void abrirGaleria() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        seleccionarImagenLauncher.launch(intent);
+    }
     private void OpenCamara()
     {
         try {

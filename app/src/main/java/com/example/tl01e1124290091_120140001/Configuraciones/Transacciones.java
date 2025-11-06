@@ -19,6 +19,7 @@ public class Transacciones
     // DDL
     public static final String CREATETABLECONTACTOS =
             "CREATE TABLE " + TableContactos + " ( " +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     pais + " TEXT NOT NULL, " +
                     nombres + " TEXT NOT NULL, " +
                     telefono + " TEXT, " +

@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,6 +48,7 @@ public class ContactoAdapter extends ArrayAdapter<Contacto> {
         TextView tvNombre = item.findViewById(R.id.tvNombre);
         TextView tvTelefono = item.findViewById(R.id.tvTelefono);
         ImageButton btnLlamar = item.findViewById(R.id.btnLlamar);
+        CheckBox checkSeleccionar = item.findViewById(R.id.checkSeleccionar);
 
         tvNombre.setText(contacto.getNombre());
         tvTelefono.setText(contacto.getTelefono());
@@ -71,6 +74,16 @@ public class ContactoAdapter extends ArrayAdapter<Contacto> {
             }
             }
         });
+        checkSeleccionar.setOnCheckedChangeListener(null); // Evita reusos erróneos del View
+        checkSeleccionar.setChecked(contacto.isSeleccionado());
+
+        checkSeleccionar.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            contacto.setSeleccionado(isChecked);
+            if (isChecked) {
+                Toast.makeText(context, "Seleccionado: " + contacto.getNombre(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return item;
     }
     public void filtrar(String texto) {

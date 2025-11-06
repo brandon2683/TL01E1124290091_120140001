@@ -1,18 +1,21 @@
 package com.example.tl01e1124290091_120140001.Configuraciones;
 
 public class Contacto {
+    private int id;
     private String pais;
     private String nombre;
     private String telefono;
     private String nota;
     private String foto;
+    private boolean seleccionado;
 
     // Constructor vacío
     public Contacto() {
     }
 
     // Constructor con parámetros
-    public Contacto(String pais, String nombre, String telefono, String nota, String foto) {
+    public Contacto(int id,String pais, String nombre, String telefono, String nota, String foto) {
+        this.id = id;
         this.pais = pais;
         this.nombre = nombre;
         this.telefono = telefono;
@@ -59,5 +62,18 @@ public class Contacto {
 
     public void setFoto(String foto) {
         this.foto = foto;
+    }
+
+    public boolean isSeleccionado() {
+        return seleccionado;
+    }
+    public void setSeleccionado(boolean seleccionado) {
+        this.seleccionado = seleccionado;
+    }
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
     }
 }
