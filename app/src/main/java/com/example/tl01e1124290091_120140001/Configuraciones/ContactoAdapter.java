@@ -66,9 +66,9 @@ public class ContactoAdapter extends ArrayAdapter<Contacto> {
             public void onClick(View v) {
             String telefono = contacto.getTelefono();
             if (telefono != null && !telefono.isEmpty()) {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:" + telefono));
-                context.startActivity(intent);
+                Intent callintent = new Intent(Intent.ACTION_CALL);
+                callintent.setData(Uri.parse("tel:" + telefono));
+                context.startActivity(callintent);
             } else {
                 Toast.makeText(context, "Número de teléfono no disponible", Toast.LENGTH_SHORT).show();
             }
@@ -103,12 +103,5 @@ public class ContactoAdapter extends ArrayAdapter<Contacto> {
         }
 
         notifyDataSetChanged(); // refrescar ListView
-    }
-    public void actualizarLista(ArrayList<Contacto> nuevosContactos) {
-        listaOriginal.clear();
-        listaOriginal.addAll(nuevosContactos);
-        contactos.clear();
-        contactos.addAll(nuevosContactos);
-        notifyDataSetChanged();
     }
 }
