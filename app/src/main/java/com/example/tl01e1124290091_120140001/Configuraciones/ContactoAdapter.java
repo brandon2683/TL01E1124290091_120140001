@@ -13,16 +13,19 @@ import android.widget.TextView;
 import com.example.tl01e1124290091_120140001.R;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ContactoAdapter extends ArrayAdapter<Contacto> {
 
     private Context context;
     private ArrayList<Contacto> contactos;
+    private ArrayList<Contacto> listaOriginal;
 
     public ContactoAdapter(Context context, ArrayList<Contacto> contactos) {
         super(context, 0, contactos);
         this.context = context;
         this.contactos = contactos;
+        this.listaOriginal = new ArrayList<>(contactos);
     }
 
     @Override
@@ -51,5 +54,30 @@ public class ContactoAdapter extends ArrayAdapter<Contacto> {
         }
 
         return item;
+    }
+    public void filtrar(String texto) {
+        texto = texto.toLowerCase(Locale.getDefault());
+        contactos.clear();
+
+        if (texto.isEmpty()) {
+            contactos.addAll(listaOriginal);
+        } else {
+            for (Contacto c : listaOriginal) {
+                if (c.getNombre().toLowerCase(Locale.getDefault()).contains(texto)
+                        || c.getTelefono().toLowerCase(Locale.getDefault()).contains(texto)
+                        || c.getPais().toLowerCase(Locale.getDefault()).contains(texto)) {
+                    contactos.add(c);
+                }
+            }
+        }
+
+        notifyDataSetChanged(); // refrescar ListView
+    }
+    public void actualizarLista(ArrayList<Contacto> nuevosContactos) {
+        listaOriginal.clear();
+        listaOriginal.addAll(nuevosContactos);
+        contactos.clear();
+        contactos.addAll(nuevosContactos);
+        notifyDataSetChanged();
     }
 }
