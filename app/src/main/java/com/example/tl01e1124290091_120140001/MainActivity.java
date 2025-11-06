@@ -136,10 +136,10 @@ public class MainActivity extends AppCompatActivity {
                 }
         });
         // Llenar mapa de países y códigos
-        paisCodigo.put("Honduras", "+504 ");
-        paisCodigo.put("Costa Rica", "+506 ");
-        paisCodigo.put("Guatemala", "+502 ");
-        paisCodigo.put("El Salvador", "+503 ");
+        paisCodigo.put("Honduras", "+504");
+        paisCodigo.put("Costa Rica", "+506");
+        paisCodigo.put("Guatemala", "+502");
+        paisCodigo.put("El Salvador", "+503");
         // Crear lista de países para el Spinner
         ArrayList<String> listaPaises = new ArrayList<>(paisCodigo.keySet());
         // Adapter del Spinner
