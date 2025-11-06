@@ -1,7 +1,7 @@
 package com.example.tl01e1124290091_120140001.Configuraciones;
 
-public class Transacciones
-{
+public class Transacciones {
+
     // Nombre de la base de datos
     public static final String DBNAME = "TL01E1";
 
@@ -14,12 +14,12 @@ public class Transacciones
     public static final String pais = "pais";
     public static final String telefono = "telefono";
     public static final String nota = "nota";
-
     public static final String foto = "foto";
 
-    // DDL
+    // DDL - Crear tabla con ID Autoincrementable (CORREGIDO)
     public static final String CREATETABLECONTACTOS =
             "CREATE TABLE " + TableContactos + " ( " +
+                    id + " INTEGER PRIMARY KEY AUTOINCREMENT, " + // <-- CLAVE PRIMARIA AÑADIDA
                     pais + " TEXT NOT NULL, " +
                     nombres + " TEXT NOT NULL, " +
                     telefono + " TEXT, " +

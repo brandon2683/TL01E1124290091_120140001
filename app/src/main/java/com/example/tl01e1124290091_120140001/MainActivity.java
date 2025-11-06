@@ -27,7 +27,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog; // Importante para la alerta
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -253,7 +253,9 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        SQLiteConexion conexion = new SQLiteConexion(this, Transacciones.DBNAME, null, 1);
+        //  CAMBIO CRÍTICO: Se incrementa la versión de la DB a 2 (o el siguiente número)
+        // para forzar la recreación de la tabla con la columna 'id' y evitar el crash.
+        SQLiteConexion conexion = new SQLiteConexion(this, Transacciones.DBNAME, null, 2);
         SQLiteDatabase db =  conexion.getWritableDatabase();
 
         ContentValues valores = new ContentValues();
