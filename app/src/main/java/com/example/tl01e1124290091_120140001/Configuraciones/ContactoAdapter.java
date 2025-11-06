@@ -1,5 +1,4 @@
 package com.example.tl01e1124290091_120140001.Configuraciones;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,24 +17,12 @@ import java.util.ArrayList;
 public class ContactoAdapter extends ArrayAdapter<Contacto> {
 
     private Context context;
-    private ArrayList<Contacto> contactosOriginal; // Lista completa
-    private ArrayList<Contacto> contactosFiltrados; // Lista filtrada
+    private ArrayList<Contacto> contactos;
 
     public ContactoAdapter(Context context, ArrayList<Contacto> contactos) {
         super(context, 0, contactos);
         this.context = context;
-        this.contactosOriginal = new ArrayList<>(contactos);
-        this.contactosFiltrados = contactos;
-    }
-
-    @Override
-    public int getCount() {
-        return contactosFiltrados.size();
-    }
-
-    @Override
-    public Contacto getItem(int position) {
-        return contactosFiltrados.get(position);
+        this.contactos = contactos;
     }
 
     @Override
@@ -45,7 +32,7 @@ public class ContactoAdapter extends ArrayAdapter<Contacto> {
             item = LayoutInflater.from(context).inflate(R.layout.item_contacto, parent, false);
         }
 
-        Contacto contacto = contactosFiltrados.get(position);
+        Contacto contacto = contactos.get(position);
 
         ImageView imgFoto = item.findViewById(R.id.imgFoto);
         TextView tvNombre = item.findViewById(R.id.tvNombre);
@@ -54,6 +41,7 @@ public class ContactoAdapter extends ArrayAdapter<Contacto> {
         tvNombre.setText(contacto.getNombre());
         tvTelefono.setText(contacto.getTelefono());
 
+        // Convertir Base64 a Bitmap
         if (contacto.getFoto() != null && !contacto.getFoto().isEmpty()) {
             byte[] bytes = Base64.decode(contacto.getFoto(), Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -63,23 +51,5 @@ public class ContactoAdapter extends ArrayAdapter<Contacto> {
         }
 
         return item;
-    }
-
-    // Método para filtrar la lista por nombre o teléfono
-    public void filtrar(String texto) {
-        texto = texto.toLowerCase();
-        contactosFiltrados = new ArrayList<>();
-
-        if (texto.isEmpty()) {
-            contactosFiltrados.addAll(contactosOriginal);
-        } else {
-            for (Contacto c : contactosOriginal) {
-                if (c.getNombre().toLowerCase().contains(texto) ||
-                        c.getTelefono().toLowerCase().contains(texto)) {
-                    contactosFiltrados.add(c);
-                }
-            }
-        }
-        notifyDataSetChanged();
     }
 }
