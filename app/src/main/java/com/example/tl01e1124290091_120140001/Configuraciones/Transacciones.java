@@ -14,7 +14,6 @@ public class Transacciones
     public static final String pais = "pais";
     public static final String telefono = "telefono";
     public static final String nota = "nota";
-
     public static final String foto = "foto";
 
     // DDL
